@@ -42,11 +42,13 @@ public class Logger {
 		}
 		Logger logger = new Logger();
 		logger.clazz = clazz;
+		createConnections();
 		return logger;
 	}
 
 	public static void addServer(String host, int port) {
 		output.add(new Pair<>(host, port));
+		createConnections();
 	}
 
 	public static void addProgramName(String name) {

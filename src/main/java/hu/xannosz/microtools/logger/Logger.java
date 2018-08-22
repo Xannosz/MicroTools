@@ -30,19 +30,13 @@ public class Logger {
 	private static JSONObject obj;
 	private static JSONArray arr;
 	private static JSONObject arrField;
-	private static boolean jsonReaded = false;
 
 	private Logger() {
 	}
 
 	public static Logger getLogger(Class<?> clazz) {
-		if (!jsonReaded) {
-			jsonReaded = true;
-			readJson();
-		}
 		Logger logger = new Logger();
 		logger.clazz = clazz;
-		createConnections();
 		return logger;
 	}
 
@@ -83,7 +77,7 @@ public class Logger {
 		}
 	}
 
-	private static void readJson() {
+	public static void readJson() {
 		obj = null;
 		try {
 			List<String> file = Files.readAllLines(Paths.get(LOGGER_JSON));
@@ -119,6 +113,7 @@ public class Logger {
 		} else if (output.isEmpty()) {
 			output.add(new Pair<>("127.0.0.1", 1776));
 		}
+		createConnections();
 	}
 
 	private static void log(LogLevel level, String message, Class<?> clazz) {
@@ -148,7 +143,7 @@ public class Logger {
 	private String createObjectLog(String format, Object[] objects) {
 		String result = format;
 		for (Object o : objects) {
-			result = result.replaceFirst("\\{\\}", ExternalToString.objectToString(o));
+			result = result.replaceFirst("\\{\\}", ExternalToString.objectToString(o).replaceAll("\\$", "."));
 		}
 		return result;
 	}

@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.javatuples.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import hu.xannosz.microtools.ExternalToString;
 import hu.xannosz.microtools.Guard;
+import hu.xannosz.microtools.pack.Douplet;
 
 public class Logger {
 
@@ -23,7 +23,7 @@ public class Logger {
 	private static final String LOGGER_JSON_NOT_FOUND = "The logger.json file not found.";
 	private static final String NONAME = "NoName";
 	private static List<ObjectOutputStream> out = new ArrayList<>();
-	private static List<Pair<String, Integer>> output = new ArrayList<>();
+	private static List<Douplet<String, Integer>> output = new ArrayList<>();
 	private static String program = NONAME;
 
 	private Class<?> clazz;
@@ -41,7 +41,7 @@ public class Logger {
 	}
 
 	public static void addServer(String host, int port) {
-		output.add(new Pair<>(host, port));
+		output.add(new Douplet<>(host, port));
 		createConnections();
 	}
 
@@ -53,7 +53,7 @@ public class Logger {
 
 	private static void createConnections() {
 		for (int i = 0; i < output.size(); i++) {
-			Pair<String, Integer> p = output.get(i);
+			Douplet<String, Integer> p = output.get(i);
 			try {
 				@SuppressWarnings({ "resource" })
 				Socket socket = new Socket();
@@ -61,7 +61,7 @@ public class Logger {
 				while (!socket.isConnected() && tries < 10) {
 					try {
 						tries += 1;
-						socket.connect(new InetSocketAddress(p.getValue0(), p.getValue1()));
+						socket.connect(new InetSocketAddress(p.getFirst(), p.getSecond()));
 
 						out.add(new ObjectOutputStream(socket.getOutputStream()));
 					} catch (IOException exp) {
@@ -107,11 +107,11 @@ public class Logger {
 			for (int i = 0; i < arr.length(); i++) {
 				arrField = arr.getJSONObject(i);
 				output.add(Guard.objectCreateWithoutException(() -> {
-					return new Pair<>(arrField.getString("server"), arrField.getInt("port"));
+					return new Douplet<>(arrField.getString("server"), arrField.getInt("port"));
 				}, false));
 			}
 		} else if (output.isEmpty()) {
-			output.add(new Pair<>("127.0.0.1", 1776));
+			output.add(new Douplet<>("127.0.0.1", 1776));
 		}
 		createConnections();
 	}

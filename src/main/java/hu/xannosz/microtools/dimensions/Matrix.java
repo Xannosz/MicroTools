@@ -1,4 +1,4 @@
-package hu.xannosz.microtools.pack;
+package hu.xannosz.microtools.dimensions;
 
 import java.util.ArrayList;
 import java.util.List;

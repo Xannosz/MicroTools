@@ -15,13 +15,21 @@ public class Json {
     public static <T> T readData(Path path, Class<T> clazz) throws IOException {
         path.toFile().getParentFile().mkdirs();
         path.toFile().createNewFile();
-        JsonElement dataObject = JsonParser.parseString(FileUtils.readFileToString(path.toFile()));
-        return new Gson().fromJson(dataObject, clazz);
+        return readData(FileUtils.readFileToString(path.toFile()), clazz);
     }
 
     public static <T> void writeData(Path path, T data) throws IOException {
         path.toFile().getParentFile().mkdirs();
         path.toFile().createNewFile();
-        FileUtils.writeStringToFile(path.toFile(), new GsonBuilder().setPrettyPrinting().create().toJson(data));
+        FileUtils.writeStringToFile(path.toFile(), writeData(data));
+    }
+
+    public static <T> T readData(String content, Class<T> clazz) {
+        JsonElement dataObject = JsonParser.parseString(content);
+        return new Gson().fromJson(dataObject, clazz);
+    }
+
+    public static <T> String writeData(T data) {
+        return new GsonBuilder().setPrettyPrinting().create().toJson(data);
     }
 }

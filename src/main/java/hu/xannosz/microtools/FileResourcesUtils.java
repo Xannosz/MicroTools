@@ -1,12 +1,13 @@
 package hu.xannosz.microtools;
 
+import lombok.experimental.UtilityClass;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@UtilityClass
 public class FileResourcesUtils {
     public static File streamToTempFile(InputStream in) {
         File tempFile = null;
@@ -19,6 +20,13 @@ public class FileResourcesUtils {
             //Empty
         }
         return tempFile;
+    }
+
+    public static String streamToString(InputStream in) {
+        return new BufferedReader(
+                new InputStreamReader(in))
+                .lines()
+                .collect(Collectors.joining("\n"));
     }
 
     public static InputStream getFileFromResourceAsStream(String fileName) {
@@ -34,5 +42,9 @@ public class FileResourcesUtils {
 
     public static File getFileFromResourceAsFile(String fileName) {
         return streamToTempFile(getFileFromResourceAsStream(fileName));
+    }
+
+    public static String getFileFromResourceAsString(String fileName) {
+        return streamToString(getFileFromResourceAsStream(fileName));
     }
 }

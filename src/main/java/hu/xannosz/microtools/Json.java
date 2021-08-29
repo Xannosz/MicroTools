@@ -32,4 +32,8 @@ public class Json {
     public static <T> String writeData(T data) {
         return new GsonBuilder().setPrettyPrinting().create().toJson(data);
     }
+
+    public static <T> T castObjectToSpecificClass(Object input, Class<T> clazz) {
+        return Json.readData(Json.writeData(input), clazz);
+    }
 }

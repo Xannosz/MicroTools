@@ -72,8 +72,8 @@
 
 	<distributionManagement>
 		<repository>
-			<id>absolute directory</id>
-			<url>file://deploy</url>
+			<id>xannosz-repository</id>
+			<url>http://daedalus.xannosz.cloud:2192/snapshots</url>
 		</repository>
 	</distributionManagement>
 
